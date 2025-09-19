@@ -1,0 +1,6 @@
+@ConfigManager.ExampleApp_HostAddress = http://localhost:5160
+
+GET {{ConfigManager.ExampleApp_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
