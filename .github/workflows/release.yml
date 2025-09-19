@@ -1,0 +1,50 @@
+name: Release
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '8.0.x'
+    
+    - name: Restore dependencies
+      run: dotnet restore
+    
+    - name: Build Release
+      run: dotnet build --no-restore --configuration Release
+    
+    - name: Run tests
+      run: dotnet test --no-build --configuration Release --verbosity normal
+    
+    - name: Extract version from tag
+      id: get_version
+      run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
+    
+    - name: Update package version
+      run: |
+        sed -i "s/<PackageVersion>.*<\/PackageVersion>/<PackageVersion>${{ steps.get_version.outputs.VERSION }}<\/PackageVersion>/" src/ConfigManager.Provider/ConfigManager.Provider.csproj
+    
+    - name: Create NuGet package
+      run: dotnet pack src/ConfigManager.Provider/ConfigManager.Provider.csproj --no-build --configuration Release --output ./packages
+    
+    - name: Publish to NuGet.org
+      run: dotnet nuget push ./packages/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
+    
+    - name: Upload NuGet package to release
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ github.event.release.upload_url }}
+        asset_path: ./packages/ConfigManager.Provider.${{ steps.get_version.outputs.VERSION }}.nupkg
+        asset_name: ConfigManager.Provider.${{ steps.get_version.outputs.VERSION }}.nupkg
+        asset_content_type: application/zip
