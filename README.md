@@ -66,12 +66,12 @@ ChangeToken.OnChange(configuration.GetReloadToken, () =>
 
 ## Configuration Key Format
 
-Redis keys follow the pattern: `{projectName}:config:{category}:{setting}`
+Redis keys follow the pattern: `{projectName}:{group}:{setting}`
 
 Examples:
-- `myapp:config:database:host` → `configuration["database:host"]`
-- `myapp:config:logging:level` → `configuration["logging:level"]`
-- `myapp:config:api:timeout` → `configuration["api:timeout"]`
+- `myapp:database:host` → `configuration["database:host"]`
+- `myapp:logging:level` → `configuration["logging:level"]`
+- `myapp:api:timeout` → `configuration["api:timeout"]`
 
 ## Advanced Configuration
 
@@ -151,16 +151,16 @@ record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary, string 
 
 ```bash
 # Set weather location (instantly updates the app)
-curl -X POST http://localhost:3001/redis/exampleapp:config:weather:location \
+curl -X POST http://localhost:3001/redis/exampleapp:weather:location \
   -H "Content-Type: application/json" \
   -d '{"value": "San Francisco"}'
 
 # Set temperature range
-curl -X POST http://localhost:3001/redis/exampleapp:config:weather:maxTemp \
+curl -X POST http://localhost:3001/redis/exampleapp:weather:maxTemp \
   -H "Content-Type: application/json" \
   -d '{"value": "25"}'
 
-curl -X POST http://localhost:3001/redis/exampleapp:config:weather:minTemp \
+curl -X POST http://localhost:3001/redis/exampleapp:weather:minTemp \
   -H "Content-Type: application/json" \
   -d '{"value": "10"}'
 ```
@@ -192,7 +192,7 @@ curl http://localhost:5000/weatherforecast
 
 ```bash
 # Change location to Tokyo (takes effect in <100ms)
-curl -X POST http://localhost:3001/redis/exampleapp:config:weather:location \
+curl -X POST http://localhost:3001/redis/exampleapp:weather:location \
   -H "Content-Type: application/json" \
   -d '{"value": "Tokyo"}'
 

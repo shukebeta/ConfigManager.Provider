@@ -43,18 +43,18 @@ Expected: No Redis config yet, using defaults (location="Unknown", temps=-20 to 
 
 ```bash
 # Set weather location
-curl -X POST http://localhost:3001/redis/exampleapp:config:weather:location \
+curl -X POST http://localhost:3001/redis/exampleapp:weather:location \
   -H "Content-Type: application/json" \
   -d '{"value": "San Francisco"}'
 
 # Set temperature range
-curl -X POST http://localhost:3001/redis/exampleapp:config:weather:maxTemp \
+curl -X POST http://localhost:3001/redis/exampleapp:weather:maxTemp \
   -H "Content-Type: application/json" \
   -d '{"value": "25"}'
 
-curl -X POST http://localhost:3001/redis/exampleapp:config:weather:minTemp \
+curl -X POST http://localhost:3001/redis/exampleapp:weather:minTemp \
   -H "Content-Type: application/json" \
-  -d '{"value": "10"}'
+  -d '{"value": "10"}'"}
 ```
 
 ### Step 4: Verify real-time updates
@@ -73,7 +73,7 @@ Expected: location="San Francisco", temperatures between 10-25°C
 
 ```bash
 # Change location dynamically
-curl -X POST http://localhost:3001/redis/exampleapp:config:weather:location \
+curl -X POST http://localhost:3001/redis/exampleapp:weather:location \
   -H "Content-Type: application/json" \
   -d '{"value": "Tokyo"}'
 

@@ -60,7 +60,7 @@ public class RedisConfigurationProvider : ConfigurationProvider, IDisposable
     {
         if (_database == null) return;
 
-        var pattern = $"{_source.ProjectName}:config:*";
+        var pattern = $"{_source.ProjectName}:*";
         var server = _redis!.GetServer(_redis.GetEndPoints().First());
         var keys = server.Keys(pattern: pattern);
 
@@ -84,8 +84,8 @@ public class RedisConfigurationProvider : ConfigurationProvider, IDisposable
 
     private string ExtractConfigKey(string redisKey)
     {
-        // Convert "projectname:config:category:setting" to "category:setting"
-        var prefix = $"{_source.ProjectName}:config:";
+        // Convert "projectname:group:setting" to "group:setting"
+        var prefix = $"{_source.ProjectName}:";
         if (redisKey.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
         {
             return redisKey[prefix.Length..];
@@ -97,7 +97,7 @@ public class RedisConfigurationProvider : ConfigurationProvider, IDisposable
     {
         if (_subscriber == null) return;
 
-        var pattern = $"{_source.ProjectName}:config:*";
+        var pattern = $"{_source.ProjectName}:*";
         
         _subscriber.Subscribe(RedisChannel.Pattern(pattern), 
             async (channel, value) =>
@@ -121,7 +121,7 @@ public class RedisConfigurationProvider : ConfigurationProvider, IDisposable
     public void Dispose()
     {
         _reloadLock?.Dispose();
-        _subscriber?.Unsubscribe(RedisChannel.Pattern($"{_source.ProjectName}:config:*"));
+        _subscriber?.Unsubscribe(RedisChannel.Pattern($"{_source.ProjectName}:*"));
         _redis?.Dispose();
     }
 }
