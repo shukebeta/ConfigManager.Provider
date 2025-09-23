@@ -8,7 +8,7 @@
     
     <!-- NuGet Package Information -->
     <PackageId>ConfigManager.Provider</PackageId>
-    <PackageVersion>1.0.1</PackageVersion>
+    <PackageVersion>2.0.0</PackageVersion>
     <Title>Redis Configuration Provider for .NET</Title>
     <Description>A .NET Configuration Provider that enables dynamic configuration management with real-time updates from Redis. Seamlessly integrates with Microsoft.Extensions.Configuration.</Description>
     <Authors>ConfigManager</Authors>
@@ -30,7 +30,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="README.md" Pack="true" PackagePath="\" />
+    <None Include="..\..\README.md" Pack="true" PackagePath="\" />
   </ItemGroup>
 
   <ItemGroup>
